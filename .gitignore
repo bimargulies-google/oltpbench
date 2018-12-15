@@ -7,6 +7,9 @@ output.res
 .classpath
 .settings
 results
+out/
+log4j.log
+
 
 ## -------------------------------
 ## Kate Swap Files

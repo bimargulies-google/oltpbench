@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<parameters>
+	
+    <!-- Connection details -->
+    <dbtype>spanner</dbtype>
+    <driver>com.simba.cloudspanner.core.jdbc42.CloudSpanner42Driver</driver>
+    <DBUrl>jdbc:cloudspanner://localhost;Project=bimargulies-spanner-oltpbench;Instance=bimargulies-tpcc;Database=tpcc;PvtKeyPath=bimargulies-spanner-oltpbench-6c5412b6cf89.json</DBUrl>
+    <isolation>TRANSACTION_SERIALIZABLE</isolation>
+    
+    <!-- Scale factor is the number of warehouses in TPCC -->
+    <scalefactor>2</scalefactor>
+    
+    <!-- The workload -->
+    <terminals>2</terminals>
+    <works>
+        <work>
+          <time>60</time>
+          <rate>10000</rate>
+          <weights>45,43,4,4,4</weights>
+        </work>
+    </works>
+	
+	<!-- TPCC specific -->  
+   	<transactiontypes>
+    	<transactiontype>
+    		<name>NewOrder</name>
+    	</transactiontype>
+    	<transactiontype>
+    		<name>Payment</name>
+    	</transactiontype>
+    	<transactiontype>
+    		<name>OrderStatus</name>
+    	</transactiontype>
+    	<transactiontype>
+    		<name>Delivery</name>
+    	</transactiontype>
+    	<transactiontype>
+    		<name>StockLevel</name>
+    	</transactiontype>
+   	</transactiontypes>	
+</parameters>

@@ -52,6 +52,7 @@ public enum DatabaseType {
     CASSANDRA("com.github.adejanovski.cassandra.jdbc.CassandraDriver", true, true, false),
     PELOTON("org.postgresql.Driver", false, false, true),
     MEMSQL("com.mysql.jdbc.Driver", true, false, false),
+    SPANNER("com.simba.cloudspanner.core.jdbc42.CloudSpanner42Driver", true, true, true)
     ;
     
     private DatabaseType(String driver,
