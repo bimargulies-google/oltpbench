@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<parameters>
+
+    <!-- Connection details -->
+    <dbtype>spanner</dbtype>
+    <driver>com.simba.cloudspanner.core.jdbc42.CloudSpanner42Driver</driver>
+    <DBUrl>jdbc:cloudspanner://localhost;Project=bimargulies-spanner-oltpbench;Instance=bimargulies-tpcc;Database=seats;PvtKeyPath=bimargulies-spanner-oltpbench-6c5412b6cf89.json</DBUrl>
+    <isolation>TRANSACTION_SERIALIZABLE</isolation>
+
+    <!-- Scalefactor in SEATS scales by *1000 the number of customers-->
+    <scalefactor>1</scalefactor>
+
+    <!-- The workload -->
+    <terminals>10</terminals>
+    <works>
+        <work>
+          <time>300</time>
+          <rate>10000</rate>
+          <weights>10, 10, 35, 20, 10, 15</weights>
+        </work>
+    </works>
+
+    <!-- SEATS Procedures declaration -->
+    <transactiontypes>
+        <transactiontype>
+                <name>DeleteReservation</name>
+        </transactiontype>
+        <transactiontype>
+                <name>FindFlights</name>
+        </transactiontype>
+        <transactiontype>
+                <name>FindOpenSeats</name>
+        </transactiontype>
+        <transactiontype>
+                <name>NewReservation</name>
+        </transactiontype>
+        <transactiontype>
+                <name>UpdateCustomer</name>
+        </transactiontype>
+        <transactiontype>
+                <name>UpdateReservation</name>
+        </transactiontype>
+    </transactiontypes>
+</parameters>

@@ -180,15 +180,27 @@ public abstract class Loader<T extends BenchmarkModule> {
      * @throws SQLException
      */
     public void unload(Catalog catalog) throws SQLException {
-        conn.setAutoCommit(false);
+      conn.setAutoCommit(false);
+      if (workConf.getDBType() == DatabaseType.SPANNER) { // todo; move to dialects.
+          conn.setAutoCommit(true);
+          Statement st = conn.createStatement();
+          st.execute("SET TRANSACTION PARTITIONED"); // allow deleting all the things.
+        }
         conn.setTransactionIsolation(workConf.getIsolationMode());
         Statement st = conn.createStatement();
         for (Table catalog_tbl : catalog.getTables()) {
             LOG.debug(String.format("Deleting data from %s.%s", workConf.getDBName(), catalog_tbl.getName()));
             String sql = "DELETE FROM " + catalog_tbl.getEscapedName();
+            if (workConf.getDBType() == DatabaseType.SPANNER) { // todo; move to dialects.
+                sql = sql + " where true";
+            }
             st.execute(sql);
         } // FOR
-        conn.commit();
+      if (workConf.getDBType() != DatabaseType.SPANNER) {
+          conn.commit();
+      } else {
+        conn.setAutoCommit(false);
+      }
     }
 
     protected void updateAutoIncrement(Column catalog_col, int value) throws SQLException {

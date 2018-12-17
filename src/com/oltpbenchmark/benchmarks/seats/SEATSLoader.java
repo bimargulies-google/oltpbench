@@ -415,7 +415,6 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
      * The number of tuples in these tables will not change based on the scale
      * factor.
      *
-     * @param catalog_db
      */
     protected void loadFixedTable(Connection conn, String table_name) {
         LOG.debug(String.format("Loading table '%s' from fixed file", table_name));
@@ -433,7 +432,6 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
      * The scaling tables are things that we will scale the number of tuples
      * based on the given scaling factor at runtime
      *
-     * @param catalog_db
      */
     protected void loadScalingTable(Connection conn, String table_name) {
         try {
@@ -450,6 +448,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
      * @param catalog_tbl
      */
     public void loadTable(Connection conn, Table catalog_tbl, Iterable<Object[]> iterable, int batch_size) {
+        batch_size = 0;
         // Special Case: Airport Locations
         final boolean is_airport = catalog_tbl.getName().equals(SEATSConstants.TABLENAME_AIRPORT);
 
@@ -493,6 +492,9 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
 
         try {
             String insert_sql = SQLUtil.getInsertSQL(catalog_tbl, this.getDatabaseType());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(catalog_tbl.getName() + " insert_sql: " + insert_sql);
+            }
             PreparedStatement insert_stmt = conn.prepareStatement(insert_sql);
             int sqlTypes[] = catalog_tbl.getColumnTypes();
 
@@ -562,9 +564,13 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
                 } // FOR
 
                 for (int i = 0; i < tuple.length; i++) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(String.format("%s row %d col %d val %s", catalog_tbl.getName(), row_idx, i+1, tuple[i]));
+                    }
                     try {
                         if (tuple[i] != null) {
-                            insert_stmt.setObject(i + 1, tuple[i]);
+                            // Spanner wants that type.
+                            insert_stmt.setObject(i + 1, tuple[i], sqlTypes[i]);
                         } else {
                             insert_stmt.setNull(i + 1, sqlTypes[i]);
                         }
@@ -739,7 +745,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
          * Constructor
          *
          * @param catalog_tbl
-         * @param table_file
+         * @param total
          * @throws Exception
          */
         public ScalingDataIterable(Table catalog_tbl, long total) {
@@ -777,7 +783,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
         /**
          * Generate a special value for this particular column index
          *
-         * @param idx
+         * @param column_idx
          * @return
          */
         protected abstract Object specialValue(long id, int column_idx);
