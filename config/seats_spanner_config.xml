@@ -4,7 +4,7 @@
     <!-- Connection details -->
     <dbtype>spanner</dbtype>
     <driver>com.simba.cloudspanner.core.jdbc42.CloudSpanner42Driver</driver>
-    <DBUrl>jdbc:cloudspanner://localhost;Project=bimargulies-spanner-oltpbench;Instance=bimargulies-tpcc;Database=seats;PvtKeyPath=bimargulies-spanner-oltpbench-6c5412b6cf89.json</DBUrl>
+    <DBUrl>jdbc:cloudspanner://localhost;Project=bimargulies-spanner-oltpbench;Instance=bimargulies-tpcc;Database=seats</DBUrl>
     <isolation>TRANSACTION_SERIALIZABLE</isolation>
 
     <!-- Scalefactor in SEATS scales by *1000 the number of customers-->
