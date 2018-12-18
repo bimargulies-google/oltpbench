@@ -87,6 +87,9 @@ public class SmallBankLoader extends Loader<SmallBankBenchmark> {
         @Override
         public void load(Connection conn) throws SQLException {
             try {
+                LOG.debug(SmallBankLoader.this.sqlAccts);
+                LOG.debug(SmallBankLoader.this.sqlSavings);
+                LOG.debug(SmallBankLoader.this.sqlChecking);
                 this.stmtAccts = conn.prepareStatement(SmallBankLoader.this.sqlAccts);
                 this.stmtSavings = conn.prepareStatement(SmallBankLoader.this.sqlSavings);
                 this.stmtChecking = conn.prepareStatement(SmallBankLoader.this.sqlChecking);

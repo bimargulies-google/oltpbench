@@ -66,7 +66,9 @@ import com.oltpbenchmark.util.StringUtil;
 import com.oltpbenchmark.util.TableDataIterable;
 
 public class SEATSLoader extends Loader<SEATSBenchmark> {
+
     private static final Logger LOG = Logger.getLogger(SEATSLoader.class);
+    public static final int BATCH_SIZE = 1000; // Spanner limit, need to parameterize, was 5000
 
     // -----------------------------------------------------------------
     // INTERNAL DATA MEMBERS
@@ -422,7 +424,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
             Table catalog_tbl = this.benchmark.getTableCatalog(table_name);
             assert (catalog_tbl != null);
             Iterable<Object[]> iterable = this.getFixedIterable(catalog_tbl);
-            this.loadTable(conn, catalog_tbl, iterable, 5000);
+            this.loadTable(conn, catalog_tbl, iterable, BATCH_SIZE);
         } catch (Throwable ex) {
             throw new RuntimeException("Failed to load data files for fixed-sized table '" + table_name + "'", ex);
         }
@@ -438,7 +440,7 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
             Table catalog_tbl = this.benchmark.getTableCatalog(table_name);
             assert (catalog_tbl != null);
             Iterable<Object[]> iterable = this.getScalingIterable(catalog_tbl);
-            this.loadTable(conn, catalog_tbl, iterable, 5000);
+            this.loadTable(conn, catalog_tbl, iterable, BATCH_SIZE);
         } catch (Throwable ex) {
             throw new RuntimeException("Failed to load data files for scaling-sized table '" + table_name + "'", ex);
         }
@@ -448,7 +450,6 @@ public class SEATSLoader extends Loader<SEATSBenchmark> {
      * @param catalog_tbl
      */
     public void loadTable(Connection conn, Table catalog_tbl, Iterable<Object[]> iterable, int batch_size) {
-        batch_size = 0;
         // Special Case: Airport Locations
         final boolean is_airport = catalog_tbl.getName().equals(SEATSConstants.TABLENAME_AIRPORT);
 
